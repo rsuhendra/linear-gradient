@@ -8,3 +8,4 @@ deprecated
 .style.yapf
 *.png
 *.avi
+*.log
