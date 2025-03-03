@@ -1,0 +1,10 @@
+.DS_Store
+*.mp4
+*.output
+*.out
+__pycache__
+deprecated
+*.ipynb
+.style.yapf
+*.png
+*.avi
