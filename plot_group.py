@@ -21,7 +21,7 @@ def run_all_plots(groupName):
 		if 'output' not in file.split('/')[-1]:
 			continue
 		
-		# plot_track(inputDir+file, groupName, ht = 2*np.pi/3, speed_threshold=0.25)
+		plot_track(inputDir+file, groupName, ht = 2*np.pi/3, speed_threshold=0.25)
 		# plot_track_segmented(inputDir+file, groupName, ht = 2*np.pi/3, speed_threshold=0.25)
 		# plot_scalar(inputDir+file, groupName, limit=60)
 
@@ -29,7 +29,7 @@ def run_all_plots(groupName):
 	distance_reached_plot(groupName, plot_dir='important')
 	distance_reached_plot(groupName, mode = 'ten', plot_dir='important')
 	efficiency_plot(groupName,plot_dir='explore' )
-
+	heading_index(groupName, speed_threshold = 0.25, plot_dir = 'explore')
 	# value_plot(groupName)
 	# value_plot(groupName, mode='angvel', speed_threshold=0.25)
 	# value_plot(groupName, weighted=True)
@@ -40,6 +40,7 @@ def run_all_plots(groupName):
 	# velocity_plot(groupName, mode='vel', speed_threshold=0.25, invert=True)
 	# velocity_plot(groupName, mode='vdir', speed_threshold=0.25, invert=True)
 
+	
 	angvels_plot(groupName, speed_threshold=0.25, plot_dir='important')
 	velocity_plot(groupName, mode='vel', speed_threshold=0.25, plot_dir='important')
 	velocity_plot(groupName, mode='vdir', speed_threshold=0.25, plot_dir='important')
@@ -51,7 +52,7 @@ def run_all_plots(groupName):
 	# velocity_distribution_plot(groupName, speed_threshold=0, ylim_max=6)
 	# velocity_distribution_plot(groupName, speed_threshold=0.25, ylim_max=3)
 	# combined_plot(groupName, region='all', angvel_threshold=None, speed_threshold=0.25)
-	head_travel_correlation(groupName)
+	# head_travel_correlation(groupName)
 		
 	# triple_region_plot(groupName, mode='vel', speed_threshold=0.25)
 	# triple_region_plot(groupName, mode='angvel', speed_threshold=0.25)
@@ -86,7 +87,7 @@ def run_all_plots(groupName):
 	# polar_turns(groupName, ht=2*np.pi/3, speed_threshold=0.25, mode='stratify')
 	polar_ash(groupName, ht=2*np.pi/3, speed_threshold=0.25, plot_dir='important')
 
-	turn_distribution(groupName, ht=2*np.pi/3, speed_threshold=0.25, mode='angle', plot_dir='important')
+	# turn_distribution(groupName, ht=2*np.pi/3, speed_threshold=0.25, mode='angle', plot_dir='important')
 	# # turn_distribution(groupName, ht=2*np.pi/3, speed_threshold=0.25, mode='time')
 	# # turn_distribution(groupName, ht=2*np.pi/3, speed_threshold=0.25, mode='temp')
 	# # turn_distribution(groupName, ht=2*np.pi/3, speed_threshold=0.25, mode='temp_restrict')
@@ -100,25 +101,26 @@ def run_all_plots(groupName):
 
 # groupNames = ['WT', 'Ablated', 'Flat25', 'Kir-+', 'L-ablated', 'R-ablated', 'AC-Kir', 'AC-+'] + ['HC-Kir', 'HC-+', 'GR28-TRPA1', 'Gr28-exc66'] + ['R4-+', 'R31A12-+'] + ['R4-Kir', 'Gr28-exc8'] + ['R31A12-Kir']
 
-# groupNames = ['WT','WT2','Ablated', 'Flat25']
-
 # groupNames = ['SS98+', 'SS98Kir', 'SS90+', 'SS90Kir', 'SS00096-+', 'SS00096-Kir', 'SS408+', 'SS408-Kir']
 
 # groupNames = ['WT', 'Ablated', 'Flat25', 'Kir-+'] +  ['SS408-Kir', 'SS408+', 'SS98+', 'SS98Kir'] + ['SS90+', 'SS90Kir'] + ['SS00096-+', 'SS00096-Kir'] + ['L-ablated', 'R-ablated', 'AC-Kir', 'AC-+'] + ['HC-Kir', 'HC-+', 'GR28-TRPA1', 'Gr28-exc66'] + ['R4-+', 'R31A12-+'] + ['R4-Kir', 'Gr28-exc8'] + ['R31A12-Kir']
 
 
-groupNames = ['SS408+', 'SS408-Kir', 'SS98+', 'SS98Kir']+['SS90+', 'SS90Kir']+['SS00096-+', 'SS00096-Kir', 'HdC+', 'HdC_Kir'] 
+# groupNames = ['SS408+', 'SS408-Kir', 'SS98+', 'SS98Kir']+['SS90+', 'SS90Kir']+['SS00096-+', 'SS00096-Kir', 'HdC+', 'HdC_Kir'] 
 
 # groupNames = ['WT', 'Ablated', 'Flat25', 'Kir-+']
 # groupNames = ['61933+', '61933_kir', 'DNB05+', 'DNB05_Kir','HdB+', 'HdB_Kir','HdC+', 'HdC_Kir']
 
-# groupNames = ['SS131+', 'SS131Kir']
 
 # groupNames = ['WT', 'Flat25', 'Ablated']
 
 # groupNames = ['WT', 'Ablated', 'Flat25', 'Kir-+', 'HC-+', 'HC-Kir', 'R-ablated', 'L-ablated']
+# groupNames = ['WT']
+groupNames = ['WT', 'Ablated']
 
-groupNames = ['WT']
+# all_heading_indices(groupNames)
+
+groupNames = ['PFL3Kir', 'FR', 'ZI', 'AblatedSteph', 'FC2Kir', 'FC2+']
 for groupName in groupNames:
 	run_all_plots(groupName)
 

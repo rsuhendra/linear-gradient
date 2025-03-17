@@ -489,7 +489,78 @@ def all_efficiencies(groupNames, ):
 	plt.close('all')
  
  
+def all_heading_indices(groupNames):
+	outputDir = 'plots/groupPlots/'
+	create_directory(outputDir)
+	outputDir_png = 'plots_png/groupPlots/'
+	create_directory(outputDir_png)
+	
+	groupName = 'WT'
+	df = pd.read_csv(f'data/{groupName}/hi_{groupName}.csv', index_col=None)
+	baseline = np.array(df['hi'])
+	
+	p_values = {}
+	dfs = []
+	for k, groupName in enumerate(groupNames):
+		df = pd.read_csv(f'data/{groupName}/hi_{groupName}.csv', index_col=None)
+		df['groupName'] = groupName
+		dfs.append(df)
+  
+		# Do quick KS test
+		compare = np.array(df['hi'])
+		alt = 'two-sided' # 'less'
+		p_value = stats.ks_2samp(baseline, compare, alternative=alt).pvalue
+		p_values[groupName] = p_value
+		# print(f"{groupName}: p-value = {p_value}")
 
+	# Concatenate all DataFrames
+	combined_df = pd.concat(dfs, ignore_index=True)
+	# print(combined_df)
+	
+	# Create the figure and axes
+	fig, ax = plt.subplots(figsize=(8, 6))
+	
+	sns.boxplot(data=combined_df, x="groupName", y="hi", ax=ax, showfliers=False)
+ 
+	sns.swarmplot(data=combined_df, x="groupName", y="hi", ax=ax, color=".25", alpha=0.7)  # Adjust color and transparency
+
+
+	# ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
+	# ax.set_ylim(-1, 1)
+ 
+	# Significance thresholding function
+	def get_asterisks(p):
+		if p < 0.001:
+			return '***'
+		elif p < 0.01:
+			return '**'
+		elif p < 0.05:
+			return '*'
+		else:
+			return None
+ 
+	ax.set_ylim(-1, 1.1)  # Extend the y-axis slightly above 1
+	y_max = 1.00  # Position for asterisks slightly below the top of the range
+	# Add significance asterisks
+	xticks = ax.get_xticks()
+	for i, group in enumerate(groupNames):
+		if group in p_values:
+			asterisks = get_asterisks(p_values[group])
+			if asterisks:
+				ax.text(xticks[i], y_max, asterisks, ha='center', fontsize=12, color='red', fontweight='bold')
+
+	ax.set_title(r'$\text{Heading Index: HI} = \frac{1}{T} \int_{0}^{T} \cos(\theta) d\theta$',fontsize=20)
+	ax.set_xlabel('Genotype')
+	ax.set_ylabel('Heading Index')
+
+	fig.tight_layout()
+	fig.savefig(outputDir + f'all_heading_indices.pdf', transparent=True)
+	fig.savefig(outputDir_png + f'all_heading_indices.png')
+	fig.clf()
+	plt.close('all')
+ 
+ 
+ 
 
 ### DEPRECATED
 

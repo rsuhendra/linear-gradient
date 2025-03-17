@@ -553,6 +553,81 @@ def efficiency_plot(groupName, plot_dir = 'explore', return_data = None):
 
 	fig.clf()
 	plt.close(fig)
+ 
+def heading_index(groupName, speed_threshold = 0.25, mode = 'orientation', plot_dir = 'explore', return_data = None):
+    
+	inputDir = 'outputs/outputs_' + groupName + '/'
+	dirs = os.listdir(inputDir)
+
+	outputDir = 'plots/' + groupName + f'/{plot_dir}/'
+	create_directory(outputDir)
+	outputDir_png = 'plots_png/' + groupName + f'/{plot_dir}/'
+	create_directory(outputDir_png)
+ 
+	hi_list = []
+	hi_df = []
+ 
+	# Store data for statistical testing
+	dataDir = f'data/{groupName}/'
+	create_directory(dataDir)
+
+	for file in dirs:
+		if 'output' not in file.split('/')[-1]:
+			continue
+
+		f1 = open(inputDir + file, 'rb')
+		pos, angles, vels, settings, originalTrackingInfo, _  = pickle.load(f1)
+		f1.close()
+
+		# Find all indices where speed greater than threshold
+		speed = np.sqrt((vels[:,0])**2 + (vels[:,1])**2)
+		idx = speed > speed_threshold
+		# Limit threshold by 5? maybe set inframe?
+  
+		if mode == 'orientation':
+			filtered_angles = angles[idx]
+			hi = np.average(np.cos(filtered_angles))
+			# print(len(idx), np.isnan(hi), file)
+		elif mode == 'angvel':
+			# Takes the normalized X coordinate 
+			# corresponding to cosine
+			velsX_filtered = vels[:,0][idx]
+			speed_filtered = speed[idx]
+			hi = np.average(velsX_filtered/speed_filtered)
+		
+		if np.isnan(hi):
+			print('One of the heading indices is nan: ', file)
+			continue
+  
+		hi_list.append(hi)
+		hi_df.append({"fname": file, "hi": hi})
+
+	# Convert list of dicts into df and store into data storage
+	hi_df = pd.DataFrame(hi_df)
+
+	hi_df.to_csv(f"{dataDir}hi_{groupName}.csv", index=False)
+
+	if return_data is not None:
+		return hi_list
+	
+	fig, ax = plt.subplots()
+ 
+	ax.boxplot(hi_list)
+	ax.scatter([1]*len(hi_list), hi_list)
+	# print(hi_list)
+	# ax.set_xticklabels([round(p, 2) for p in percent_reached])
+	ax.set_ylabel('Heading Index')
+	ax.set_ylim([-1, 1])
+
+	fig.suptitle(groupName)
+
+	fig.tight_layout()
+	fig.savefig(outputDir + 'heading_index_'+groupName+'.pdf', transparent=True)
+	fig.savefig(outputDir_png + 'heading_index_'+groupName+'.png')
+
+	fig.clf()
+	plt.close(fig)
+
 
 
 def border_touch(groupName, plot_dir = 'explore'):
